@@ -1,88 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp"
-    android:background="#f8f9fa">
+    android:background="#121212">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:padding="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:elevation="8dp"
+        android:backgroundTint="#1E1E1E">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Imagen de la portada -->
             <ImageView
                 android:id="@+id/imgCover"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:contentDescription="Portada de la canción"
                 android:scaleType="centerCrop"
-                android:layout_marginBottom="8dp" />
+                android:background="#333333"
+                android:contentDescription="Portada de la canción"
+                android:layout_marginBottom="16dp" />
 
-            <!-- Título de la canción -->
             <TextView
                 android:id="@+id/txtTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Título"
-                android:textSize="16sp"
+                android:text="Título de la Canción"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_marginBottom="4dp" />
-
-            <!-- Artista -->
-            <TextView
-                android:id="@+id/txtArtist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Artista"
-                android:textSize="14sp"
-                android:gravity="center"
-                android:layout_gravity="center"
+                android:textAlignment="center"
                 android:layout_marginBottom="8dp" />
 
-            <!-- Barra de progreso -->
+            <TextView
+                android:id="@+id/txtArtist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Artista"
+                android:textColor="#B3FFFFFF"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_marginBottom="16dp" />
+
             <SeekBar
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" />
+                android:progressBackgroundTint="#555555"
+                android:progressTint="#FFFFFF"
+                android:thumbTint="#FFFFFF"
+                android:layout_marginBottom="16dp" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botones organizados en dos filas -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
 
-        <!-- Fila 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp">
 
             <Button
                 android:id="@+id/btnPrevious"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Anterior"
-                android:layout_marginEnd="4dp" />
+                android:text="Anterior Canción"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btnStart"
@@ -90,8 +94,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Iniciar"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btnPause"
@@ -99,10 +105,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Pausar"
-                android:layout_marginStart="4dp" />
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
-        <!-- Fila 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -111,11 +118,13 @@
 
             <Button
                 android:id="@+id/btnResume"
-                android:layout_width="0dp"
+                android:layout_width="1dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Continuar"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btnStop"
@@ -123,16 +132,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Detener"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/btnNext"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Siguiente"
-                android:layout_marginStart="4dp" />
+                android:text="Siguiente Canción"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#2C2C2C"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
