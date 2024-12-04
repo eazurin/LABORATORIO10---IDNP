@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,9 +22,11 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Handler handler;
 
-    private int[] songs = {R.raw.ellaquierebeberanuelaa, R.raw.brotheranuelaa, R.raw.unapalabraanuelaa, R.raw.coroneanuelaa, R.raw.losdiosesozunaanuelaa, R.raw.elosodeldineroozuna, R.raw.unanotiomarcourtz}; // Lista de canciones
+    private int[] songs = {R.raw.ellaquierebeberanuelaa, R.raw.brotheranuelaa, R.raw.unapalabraanuelaa,
+            R.raw.coroneanuelaa, R.raw.losdiosesozunaanuelaa, R.raw.elosodeldineroozuna,
+            R.raw.unanotiomarcourtz};
     private int currentSongIndex = 0;
-
+    private boolean isPlaying = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,15 +88,12 @@ public class MainActivity extends AppCompatActivity {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(this, Uri.parse("android.resource://" + getPackageName() + "/" + songs[currentSongIndex]));
 
-            // Título
             String title = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
             txtTitle.setText(title != null ? title : "Sin título");
 
-            // Artista
             String artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
             txtArtist.setText(artist != null ? artist : "Artista desconocido");
 
-            // Portada
             byte[] art = retriever.getEmbeddedPicture();
             if (art != null) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
@@ -113,45 +112,87 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startPlaying() {
-        if (!mediaPlayer.isPlaying()) {
+        if (!isPlaying) {
             mediaPlayer.start();
+            isPlaying = true;
             updateSeekBar();
+
+            Intent startServiceIntent = new Intent(this, AudioPlayerService.class);
+            startServiceIntent.setAction("START");
+            startService(startServiceIntent);
         }
     }
 
     private void pausePlaying() {
-        if (mediaPlayer.isPlaying()) {
+        if (isPlaying) {
             mediaPlayer.pause();
+            isPlaying = false;
+
+            Intent pauseServiceIntent = new Intent(this, AudioPlayerService.class);
+            pauseServiceIntent.setAction("PAUSE");
+            startService(pauseServiceIntent);
         }
     }
 
     private void resumePlaying() {
-        if (!mediaPlayer.isPlaying()) {
+        if (!isPlaying) {
             mediaPlayer.start();
+            isPlaying = true;
             updateSeekBar();
+
+            Intent resumeServiceIntent = new Intent(this, AudioPlayerService.class);
+            resumeServiceIntent.setAction("RESUME");
+            startService(resumeServiceIntent);
         }
     }
 
     private void stopPlaying() {
-        if (mediaPlayer != null) {
+        if (isPlaying) {
             mediaPlayer.stop();
+            isPlaying = false;
             initializeMediaPlayer();
+
+            Intent stopServiceIntent = new Intent(this, AudioPlayerService.class);
+            stopServiceIntent.setAction("STOP");
+            startService(stopServiceIntent);
         }
     }
 
     private void changeSong(int direction) {
         if (mediaPlayer != null) {
             currentSongIndex = (currentSongIndex + direction + songs.length) % songs.length;
-            initializeMediaPlayer();
-            startPlaying();
+
+            if (isPlaying) {
+                stopPlaying();
+                initializeMediaPlayer();
+                startPlaying();
+            } else {
+                initializeMediaPlayer();
+            }
         }
     }
 
     private void updateSeekBar() {
         seekBar.setProgress(mediaPlayer.getCurrentPosition());
-        if (mediaPlayer.isPlaying()) {
+        if (isPlaying) {
             handler.postDelayed(this::updateSeekBar, 1000);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent stopForegroundIntent = new Intent(this, AudioPlayerService.class);
+        stopForegroundIntent.setAction("STOP_FOREGROUND");
+        startService(stopForegroundIntent);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Intent startForegroundIntent = new Intent(this, AudioPlayerService.class);
+        startForegroundIntent.setAction("START_FOREGROUND");
+        startService(startForegroundIntent);
     }
 
     @Override

@@ -19,10 +19,7 @@ public class AudioPlayerService extends Service {
         super.onCreate();
 
         createNotificationChannel();
-
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.ellaquierebeberanuelaa);
-        mediaPlayer.setLooping(false);
+        mediaPlayer = new MediaPlayer();
     }
 
     @Override
@@ -55,11 +52,40 @@ public class AudioPlayerService extends Service {
                     stopForeground(true);
                     stopSelf();
                     break;
+
+                case "START_FOREGROUND":
+                    startForeground(1, createNotification("Reproduciendo en segundo plano..."));
+                    break;
+
+                case "STOP_FOREGROUND":
+                    stopForeground(true);
+                    break;
             }
         }
         return START_NOT_STICKY;
     }
 
+    private void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CharSequence name = "AudioPlayer Channel";
+            String description = "Canal de notificaciones para el reproductor de audio";
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private Notification createNotification(String contentText) {
+        return new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Reproductor de Audio")
+                .setContentText(contentText)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .build();
+    }
 
     @Override
     public void onDestroy() {
@@ -75,26 +101,4 @@ public class AudioPlayerService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-    private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel(
-                CHANNEL_ID,
-                "Audio Player Service",
-                NotificationManager.IMPORTANCE_LOW
-        );
-        NotificationManager manager = getSystemService(NotificationManager.class);
-        if (manager != null) {
-            manager.createNotificationChannel(channel);
-        }
-    }
-
-    private Notification createNotification(String contentText) {
-        return new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Audio Player")
-                .setContentText(contentText)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .build();
-    }
 }
-
-
